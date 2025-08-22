@@ -18,7 +18,7 @@ const PollView = () => {
   const [viewerCount, setViewerCount] = useState(0)
   const [isCreator, setIsCreator] = useState(false)
   const [creatorSecret, setCreatorSecret] = useState(null)
-  
+
   // fetch poll data
   const fetchPoll = async (secret) => {
     try {
@@ -189,10 +189,131 @@ const PollView = () => {
       newSocket.disconnect()
     }
   }, [id])
-  
+
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="animate-pulse space-y-6">
+          <div className="h-8 bg-base-300 rounded w-3/4"></div>
+          <div className="h-32 bg-base-300 rounded"></div>
+          <div className="space-y-3">
+            <div className="h-12 bg-base-300 rounded"></div>
+            <div className="h-12 bg-base-300 rounded"></div>
+            <div className="h-12 bg-base-300 rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !poll) {
+    return (
+      <div className="max-w-4xl mx-auto text-center py-16">
+        <div className="text-6xl mb-4">😕</div>
+        <h1 className="text-2xl font-bold mb-2">Poll Not Found</h1>
+        <p className="text-base-content mb-6">
+          {error || "The poll you're looking for doesn't exist or has been removed."}
+        </p>
+        <button className="btn btn-primary" onClick={() => (window.location.href = "/")}>
+          Go Home
+        </button>
+      </div>
+    );
+  }
+
+  const timeLeft = new Date(poll.expiresAt) - new Date();
+  const hoursLeft = Math.max(0, Math.floor(timeLeft / (1000 * 60 * 60)));
+  const minutesLeft = Math.max(0, Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)));
+
   return (
-    <div>
-      Poll view
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Poll Header */}
+      <div className="card bg-base-100 shadow-md">
+        <div className="card-body">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <h2 className="card-title text-2xl mb-2">{poll.question}</h2>
+              <div className="flex items-center gap-4 text-base">
+                <span className="flex items-center gap-1">
+                  <span className="material-icons text-sm">groups</span>
+                  {poll.votesCount} votes
+                </span>
+                {viewerCount > 0 && (
+                  <span className="flex items-center gap-1">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    {viewerCount} viewing
+                  </span>
+                )}
+                <span className="flex items-center gap-1">
+                  <span className="material-icons text-sm">schedule</span>
+                  {poll.isExpired ? (
+                    <div className="badge badge-error">Expired</div>
+                  ) : (
+                    <span>
+                      {hoursLeft}h {minutesLeft}m left
+                    </span>
+                  )}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {(poll.insight || poll.insightSummary) && (
+                <div className="badge badge-secondary flex items-center gap-1">
+                  Insight Available
+                </div>
+              )}
+              {isCreator && <div className="badge badge-outline">Creator</div>}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Insights Section */}
+      {(poll.insight || poll.insightSummary) && (
+        <div className="card bg-base-100 shadow-md p-4">
+          {(poll.insight || poll.insightSummary) && <InsightCard poll={poll} insightSummary={poll.insightSummary} />}
+        </div>
+      )}
+
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Main Poll Content */}
+        <div className="lg:col-span-2 space-y-6">
+          {!hasVoted && !poll.isExpired ? (
+            <div className="card bg-base-200 shadow-md p-4">
+              <VotingInterface poll={poll} onVote={handleVote} showResults={!poll.hideResultsUntilVoted} />
+            </div>
+          ) : (
+            <div className="card bg-base-200 shadow-md p-4">
+              <ResultsBars poll={poll} userChoice={userChoice} showAnimation={true} />
+            </div>
+          )}
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-6">
+          <div className="card bg-base-100 shadow-md p-4">
+            <SharePanel pollId={id} question={poll.question} />
+          </div>
+
+          {isCreator && (
+            <div className="card bg-base-100 shadow-md p-4">
+              <CreatorPanel
+                poll={poll}
+                creatorSecret={creatorSecret}
+                onSettingsUpdate={(settings) => {
+                  if (socket) {
+                    socket.emit("update-poll-settings", {
+                      pollId: id,
+                      creatorSecret,
+                      ...settings,
+                    })
+                  }
+                }}
+              />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
