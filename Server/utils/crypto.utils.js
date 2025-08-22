@@ -1,11 +1,32 @@
-//  generate creator secret
+import crypto from "crypto"
+import bcrypt from "bcryptjs"
 
-// hash token
+const SECRET_KEY = process.env.SECRET_KEY || "fallback-secret-key"
 
-// hash ip
+export function generateCreatorSecret() {
+  return crypto.randomBytes(32).toString("hex")
+}
 
-// generate vote token
+export function hashToken(pollId, token) {
+  return crypto.createHmac("sha256", SECRET_KEY).update(`${pollId}:${token}`).digest("hex")
+}
 
-// hash password
+export function hashDevice(userAgent, ip) {
+  return crypto.createHash("sha256").update(`${userAgent}:${ip}`).digest("hex")
+}
 
-// compare password
+export function hashIP(ip) {
+  return crypto.createHash("sha256").update(ip).digest("hex")
+}
+
+export function generateVoteToken() {
+  return crypto.randomBytes(16).toString("hex")
+}
+
+export async function hashPassword(password) {
+  return bcrypt.hash(password, 12)
+}
+
+export async function comparePassword(password, hash) {
+  return bcrypt.compare(password, hash)
+}
