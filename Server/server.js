@@ -1,13 +1,17 @@
-import http from 'http';
-import app from './index';
+import { createServer } from "http"
+import { Server } from "socket.io"
+import dotenv from "dotenv"
+import app, { prisma, redis } from './index.js'
 import cors from 'cors';
-import { Server } from 'socket.io'
-import dotenv from 'dotenv';
 
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
-const server = http.createServer(app);
+const server = createServer(app);
+
+// Import socket handlers and jobs
+import { setupSocketHandlers } from "./socket/handlers.socket.js"
+import { scheduleCleanup } from "./jobs/cleanup.js"
 
 // socket io
 const io = new Server(server, {
