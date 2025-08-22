@@ -10,7 +10,7 @@ router.get('/poll/:id', graphMetaTag)
 
 // Get req
 // get og image
-router.get('/poll/:id.png', dynamicGraphImage)
+router.get('/poll/:id/image.png', dynamicGraphImage)
 
 // Get req
 // get favicon

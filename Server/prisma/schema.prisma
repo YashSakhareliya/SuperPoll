@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Poll {
+  id                    String   @id @default(cuid())
+  question              String   @db.VarChar(120)
+  expiresAt             DateTime
+  creatorSecret         String   @unique
+  hideResultsUntilVoted Boolean  @default(false)
+  votesCount            Int      @default(0)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  options               Option[]
+  votes                 Vote[]
+
+  @@map("polls")
+}
+
+model Option {
+  id         String @id @default(cuid())
+  pollId     String
+  text       String @db.VarChar(100)
+  votesCount Int    @default(0)
+  order      Int
+  poll       Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes      Vote[]
+
+  @@map("options")
+}
+
+model Vote {
+  id             String   @id @default(cuid())
+  pollId         String
+  optionId       String
+  tokenHash      String
+  deviceHash     String
+  idempotencyKey String
+  ipHash         String
+  createdAt      DateTime @default(now())
+  option         Option   @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  poll           Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+
+  @@unique([pollId, tokenHash])
+  @@unique([pollId, idempotencyKey])
+  @@map("votes")
+}

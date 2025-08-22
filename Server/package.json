@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@prisma/client": "^6.14.0",
     "bcryptjs": "^3.0.2",
     "canvas": "^3.2.0",
     "cookie-parser": "^1.4.7",
@@ -28,6 +29,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "prism": "^1.0.0",
     "prisma": "^6.14.0"
   }
 }

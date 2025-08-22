@@ -66,12 +66,12 @@ const voteLimiter = rateLimit({
   message: "Too many votes from this IP, please slow down.",
 })
 
-app.use("/api/polls/*/vote", voteLimiter)
-app.use("/api/polls/*/vote", detectSuspiciousActivity)
+app.use("/api/polls", voteLimiter)
+app.use("/api/polls", detectSuspiciousActivity)
 
 // Routes
 app.use("/api/polls", pollRoutes)
-app.use("/api/polls", votingRoutes)
+app.use("/api/voting", votingRoutes)
 app.use('/og', ogRoutes)
 
 // Health check
@@ -86,8 +86,7 @@ app.use((err, req, res, next) => {
 })
 
 // 404 handler
-app.use("*", (req, res) => {
+app.use((req, res) => {
   res.status(404).json({ error: "Route not found" })
 })
-
 export default app

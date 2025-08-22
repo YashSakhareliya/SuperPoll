@@ -34,7 +34,7 @@ const graphMetaTag = async (req, res) => {
         const optionsList = poll.options.map((opt) => opt.text).join(" • ")
         const description = `Vote now: ${optionsList}`
         const pollUrl = `${req.protocol}://${req.get("host")}/poll/${id}`
-        const imageUrl = `${req.protocol}://${req.get("host")}/og/poll/${id}.png`
+        const imageUrl = `${req.protocol}://${req.get("host")}/og/poll/${id}/image.png`
 
         const html = `
         <!DOCTYPE html>
