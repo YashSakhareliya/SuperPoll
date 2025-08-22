@@ -4,7 +4,11 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "start": "node server.js",
+    "build": "prisma generate",
+    "db:deploy": "prisma migrate deploy",
+    "db:generate": "prisma generate"
   },
   "type": "module",
   "keywords": [],
