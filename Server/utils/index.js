@@ -2,6 +2,7 @@ import { parseQuickCreate } from "./parser.utils.js";
 import { generateCreatorSecret, hashToken, hashDevice, hashIP, generateVoteToken, hashPassword, comparePassword } from "./crypto.utils.js";
 import { generatePollQR, generatePollQRSVG } from "./qr.utils.js";
 import { generateInsight, generateInsightSummary } from "./insights.utils.js";
+import { getVoteAnalytics, detectVotingAnomalies } from "./analytics.js";
 
 export { parseQuickCreate,
     generateCreatorSecret,
@@ -14,4 +15,7 @@ export { parseQuickCreate,
     hashPassword,
     comparePassword,
     generateInsight,
-    generateInsightSummary }
+    generateInsightSummary,
+    getVoteAnalytics,
+    detectVotingAnomalies
+}
