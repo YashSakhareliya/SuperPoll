@@ -15,6 +15,8 @@ app.use(
     }),
 )
 
+// prisma instance
+const prisma = new PrismaClient()
 
 // routes
 app.get('/', (req, res) => {
