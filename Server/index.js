@@ -10,6 +10,7 @@ import dotenv from "dotenv"
 // Import routes
 import pollRoutes from "./routes/polls.route.js"
 import votingRoutes from "./routes/voting.route.js"
+import ogRoutes from "./routes/og.route.js"
 
 // Import middleware
 import { detectSuspiciousActivity } from "./middleware/security.middleware.js"
@@ -70,6 +71,7 @@ app.use("/api/polls/*/vote", detectSuspiciousActivity)
 // Routes
 app.use("/api/polls", pollRoutes)
 app.use("/api/polls", votingRoutes)
+app.use('/og', ogRoutes)
 
 // Health check
 app.get("/health", (req, res) => {

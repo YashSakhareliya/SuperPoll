@@ -1,5 +1,6 @@
 import { createPoll, deletePoll, getPoll, getPollAdvanceInsights, getPollQr, getPollStats, updatePoll } from "./polls.controllers.js";
 import { castVote, voteStatus } from "./voting.controller.js";
+import { graphMetaTag, dynamicGraphImage, serveFavicon } from "./og.controllers.js";
 
 export { createPoll,
     deletePoll,
@@ -9,4 +10,8 @@ export { createPoll,
     getPollStats,
     updatePoll,
     castVote,
-    voteStatus }
+    voteStatus,
+    graphMetaTag,
+    dynamicGraphImage,
+    serveFavicon 
+}
