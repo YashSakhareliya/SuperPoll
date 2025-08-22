@@ -360,7 +360,6 @@ const getPollStats = async (req, res) => {
 const getPollQr = async (req, res) => {
     try {
       const { id } = req.params
-      const { format = "png" } = req.query
   
       // Verify poll exists
       const poll = await prisma.poll.findUnique({
@@ -373,24 +372,15 @@ const getPollQr = async (req, res) => {
       }
   
       const baseUrl = `${req.protocol}://${req.get("host")}`
+      
+      // Always return JSON with SVG data for frontend consumption
+      const qrCode = await generatePollQRSVG(id, baseUrl)
   
-      if (format === "svg") {
-        const qrCode = await generatePollQRSVG(id, baseUrl)
-  
-        res.setHeader("Content-Type", "image/svg+xml")
-        res.setHeader("Cache-Control", "public, max-age=3600")
-        res.send(qrCode.svg)
-      } else {
-        const qrCode = await generatePollQR(id, baseUrl)
-  
-        // Convert data URL to buffer
-        const base64Data = qrCode.dataUrl.replace(/^data:image\/png;base64,/, "")
-        const buffer = Buffer.from(base64Data, "base64")
-  
-        res.setHeader("Content-Type", "image/png")
-        res.setHeader("Cache-Control", "public, max-age=3600")
-        res.send(buffer)
-      }
+      res.json({
+        svg: qrCode.svg,
+        url: qrCode.url,
+        pollId: id
+      })
     } catch (error) {
       console.error("Error generating QR code:", error)
       res.status(500).json({ error: "Failed to generate QR code" })
