@@ -16,6 +16,9 @@ import ogRoutes from "./routes/og.route.js"
 // Import middleware
 import { detectSuspiciousActivity } from "./middleware/security.middleware.js"
 
+// Import OG controller for bot detection
+import { graphMetaTag } from "./controllers/og.controllers.js"
+
 dotenv.config()
 
 const app = express()
@@ -68,6 +71,45 @@ const voteLimiter = rateLimit({
 
 app.use("/api/polls", voteLimiter)
 app.use("/api/polls", detectSuspiciousActivity)
+
+// Bot detection middleware for social media crawlers
+const isSocialBot = (userAgent) => {
+  if (!userAgent) return false
+  
+  const botPatterns = [
+    /facebookexternalhit/i,
+    /whatsapp/i,
+    /twitterbot/i,
+    /telegrambot/i,
+    /discordbot/i,
+    /linkedinbot/i,
+    /slackbot/i,
+    /skypeuripreview/i,
+    /microsoftpreview/i,
+    /googlebot/i,
+    /bingbot/i,
+    /applebot/i,
+    /redditbot/i,
+    /snapchat/i
+  ]
+  
+  return botPatterns.some(pattern => pattern.test(userAgent))
+}
+
+// Handle /poll/:id route - serve OG tags for bots, redirect regular users to frontend
+app.get('/poll/:id', (req, res) => {
+  const userAgent = req.get('User-Agent') || ''
+  
+  if (isSocialBot(userAgent)) {
+    // Serve OG meta tags for social media bots
+    console.log(`Bot detected: ${userAgent} requesting poll ${req.params.id}`)
+    return graphMetaTag(req, res)
+  }
+  
+  // For regular users, redirect to frontend
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173'
+  res.redirect(`${frontendUrl}/poll/${req.params.id}`)
+})
 
 // Routes
 app.use("/api/polls", pollRoutes)

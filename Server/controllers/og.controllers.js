@@ -201,6 +201,9 @@ const dynamicGraphImage = async (req, res) => {
         // Send image
         res.setHeader("Content-Type", "image/png")
         res.setHeader("Cache-Control", "public, max-age=3600") // Cache for 1 hour
+        res.setHeader("Access-Control-Allow-Origin", "*")
+        res.setHeader("Access-Control-Allow-Methods", "GET")
+        res.setHeader("Access-Control-Allow-Headers", "Content-Type")
 
         const buffer = canvas.toBuffer("image/png")
         res.send(buffer)
