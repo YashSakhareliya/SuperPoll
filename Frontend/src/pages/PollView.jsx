@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { Clock, Users, TrendingUp } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from '../hooks/use-toast'
 
 const PollView = () => {
   const { id } = useParams()
