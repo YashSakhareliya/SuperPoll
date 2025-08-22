@@ -1,5 +1,5 @@
 import express from "express";
-import { createPoll } from "../controllers/index.js";
+import { createPoll, getPoll, getPollAdvanceInsights, getPollQr, getPollStats, updatePoll, deletePoll } from "../controllers/index.js";
 
 const router = express.Router();
 
@@ -11,7 +11,24 @@ router.post('/', createPoll)
 // get poll details - user open url so hit this route - return details about poll
 router.get('/:id', getPoll)
 
-// Get req
-// get new qe for poll
+// put req
+// update poll settings
+router.put('/:id/settings', updatePoll)
+
+// delete req
+// delete poll
+router.delete('/:id', deletePoll)
+
+// get req
+// get poll stats
+router.get('/:id/stats', getPollStats)
+
+// get req
+// get poll insights
+router.get('/:id/insights', getPollAdvanceInsights)
+
+// get req
+// get poll qr
+router.get('/:id/qr', getPollQr)
 
 export default router;
