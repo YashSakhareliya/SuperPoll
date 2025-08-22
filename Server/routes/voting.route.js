@@ -1,5 +1,5 @@
 import express from 'express';
-import { castVote, voteStatus } from '../controllers/index';
+import { castVote, voteStatus } from '../controllers/index.js';
 
 const router = express.Router();
 

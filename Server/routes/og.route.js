@@ -1,5 +1,5 @@
 import express from 'express';
-import { graphMetaTag, dynamicGraphImage, serveFavicon } from '../controllers/index';
+import { graphMetaTag, dynamicGraphImage, serveFavicon } from '../controllers/index.js';
 
 const router = express.Router();
 

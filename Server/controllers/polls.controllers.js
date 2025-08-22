@@ -1,6 +1,6 @@
 import { prisma } from "../index.js";
 import { parseQuickCreate, generateCreatorSecret, generatePollQR } from "../utils/index.js";
-import { hashToken, hashDevice, hashIP, generateVoteToken, hashPassword, comparePassword, generateCreatorSecret } from "../utils/index.js";
+import { hashToken, hashDevice, hashIP, generateVoteToken, hashPassword, comparePassword } from "../utils/index.js";
 import { generateInsight, generateInsightSummary } from "../utils/index.js";
 
 const createPoll = async (req, res) => {
@@ -238,7 +238,7 @@ const updatePoll = async (req, res) => {
 
 
 
-async (req, res) => {
+const deletePoll = async (req, res) => {
     try {
       const { id } = req.params
       const { creatorSecret } = req.body

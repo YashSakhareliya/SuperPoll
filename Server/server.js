@@ -9,8 +9,8 @@ const PORT = process.env.PORT || 3000;
 const server = createServer(app);
 
 // Import socket handlers and jobs
-import { setupSocketHandlers } from "./socket/handlers.socket.js"
-import { scheduleCleanup } from "./jobs/cleanup.js"
+import { setupSocketHandlers } from "./scoket/handlers.socket.js"
+import { scheduleCleanup } from "./middleware/cleanup.middleware.js"
 
 // socket io
 const io = new Server(server, {

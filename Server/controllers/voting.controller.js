@@ -1,5 +1,5 @@
-import { prisma } from "../index"
-import { hashToken, hashDevice, hashIP, generateVoteToken } from "../utils/index"
+import { prisma } from "../index.js"
+import { hashToken, hashDevice, hashIP, generateVoteToken } from "../utils/index.js"
 import { v4 as uuidv4 } from "uuid"
 
 const castVote = async (req, res) => {

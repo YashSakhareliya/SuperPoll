@@ -1,4 +1,4 @@
-import { prisma } from "../index"
+import { prisma } from "../index.js"
 
 // Enhanced insight generation with multiple analysis types
 export function generateInsight(poll, options, votes = null) {

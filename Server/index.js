@@ -3,7 +3,8 @@ import cors from "cors"
 import helmet from "helmet"
 import rateLimit from "express-rate-limit"
 import cookieParser from "cookie-parser"
-import { PrismaClient } from "@prisma/client"
+import pkg from '@prisma/client';
+const { PrismaClient } = pkg;
 import { createClient } from "redis"
 import dotenv from "dotenv"
 
