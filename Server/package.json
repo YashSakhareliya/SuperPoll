@@ -6,9 +6,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node --watch server.js",
     "start": "node server.js",
-    "build": "prisma generate",
+    "build": "echo 'Build completed - Prisma will generate at runtime'",
     "db:deploy": "prisma migrate deploy",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "postinstall": "prisma generate"
   },
   "type": "module",
   "keywords": [],
