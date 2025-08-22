@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Routes, Route } from "react-router-dom"
-import { Home } from './pages'
+import { Home, CreatePoll, PollView } from './pages'
 import { Layout } from './components'
 
 
@@ -11,6 +11,8 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/create" element={<CreatePoll />} />
+          <Route path="/create" element={<PollView />} />
         </Routes>
       </Layout>
     </>

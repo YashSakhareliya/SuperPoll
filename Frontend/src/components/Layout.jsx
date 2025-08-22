@@ -3,10 +3,10 @@ import { Vote, Plus, Home } from "lucide-react"
 
 const Layout = ({ children }) => {
   return (
-    <div className="min-h-screen max-w-screen bg-background">
+    <div className="min-h-screen max-w-screen bg-background overflow-hidden">
       <header className="border-b w-full border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
-          <nav className="flex items-center justify-between">
+          <nav className="flex items-center justify-between pr-5">
             <Link to="/" className="flex items-center gap-2 text-xl font-bold text-primary">
               <Vote className="h-6 w-6" />
               QuickPoll
