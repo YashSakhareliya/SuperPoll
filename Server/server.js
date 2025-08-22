@@ -1,8 +1,7 @@
 import { createServer } from "http"
 import { Server } from "socket.io"
 import dotenv from "dotenv"
-import app, { prisma, redis } from './index.js'
-import cors from 'cors';
+import app from './index.js'
 
 dotenv.config();
 
@@ -27,7 +26,13 @@ const io = new Server(server, {
 // set io to available in app
 app.set("io", io)
 
+// setup socket handlers
+setupSocketHandlers(io)
+
 server.listen(PORT, () => {
     console.log(`Server running on port http://localhost:${PORT}`);
     console.log(`Socket.io server ready for real-time connections`)
+    
+    // schedule cleanup
+    scheduleCleanup()
 });
