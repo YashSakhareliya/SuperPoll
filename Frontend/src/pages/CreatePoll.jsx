@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Plus, Minus, Wand2, Clock, Eye, EyeOff, ArrowRight } from "lucide-react"
 import { useToast } from "../hooks/use-toast"
+import { pollsAPI } from "../utils/api"
 
 const CreatePoll = () => {
   const navigate = useNavigate()
@@ -16,7 +17,7 @@ const CreatePoll = () => {
     hideResultsUntilVoted: false,
     quickCreate: "",
   })
-
+  console.log(formData)
   const addOption = () => {
     if (formData.options.length < 4) {
       setFormData((prev) => ({
@@ -45,7 +46,7 @@ const CreatePoll = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-
+    console.log("In handel submit")
     try {
       const payload = useQuickCreate
         ? {
@@ -55,19 +56,9 @@ const CreatePoll = () => {
           }
         : formData
 
-      const response = await fetch("/api/polls", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to create poll")
-      }
+      const response = await pollsAPI.createPoll(payload)
+      console.log(response)
+      const data = response.data
 
       localStorage.setItem(`poll_${data.poll.id}_secret`, data.creatorSecret)
 
@@ -80,7 +71,7 @@ const CreatePoll = () => {
     } catch (error) {
       toast({
         title: "Error creating poll",
-        description: error.message,
+        description: error.response?.data?.error || error.message,
         variant: "destructive",
       })
     } finally {

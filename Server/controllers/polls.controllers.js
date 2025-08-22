@@ -1,9 +1,11 @@
 import { prisma } from "../index.js";
-import { parseQuickCreate, generateCreatorSecret, generatePollQR } from "../utils/index.js";
+import { parseQuickCreate, generateCreatorSecret, generatePollQR, generatePollQRSVG } from "../utils/index.js";
 import { hashToken, hashDevice, hashIP, generateVoteToken, hashPassword, comparePassword } from "../utils/index.js";
 import { generateInsight, generateInsightSummary } from "../utils/index.js";
+import { broadcastPollDeleted } from "../scoket/handlers.socket.js";
 
 const createPoll = async (req, res) => {
+  console.log("Create Poll route called")
     try {
         const { question, options, expiryHours = 24, hideResultsUntilVoted = false, quickCreate } = req.body
 

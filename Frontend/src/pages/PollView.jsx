@@ -4,7 +4,9 @@ import { useParams } from "react-router-dom"
 import { Clock, Users, TrendingUp } from "lucide-react"
 import { useToast } from '../hooks/use-toast'
 import { SharePanel, CreatorPanel, InsightCard, VotingInterface } from '../components'
+import ResultsBars from '../components/ResultsBars'
 import { io } from "socket.io-client"
+import { pollsAPI, votingAPI } from '../utils/api'
 
 const PollView = () => {
   const { id } = useParams()
@@ -22,23 +24,13 @@ const PollView = () => {
   // fetch poll data
   const fetchPoll = async (secret) => {
     try {
-      const url = new URL(`/api/polls/${id}`, window.location.origin)
-      if (secret) {
-        url.searchParams.set("creatorSecret", secret)
-      }
-
-      // fetch poll data from backend
-      const response = await fetch(url)
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to fetch poll")
-      }
+      const response = await pollsAPI.getPoll(id, secret)
+      const data = response.data
 
       setPoll(data)
       setIsCreator(data.isCreator)
     } catch (error) {
-      setError(error.message)
+      setError(error.response?.data?.error || error.message)
     } finally {
       setLoading(false)
     }
@@ -46,11 +38,8 @@ const PollView = () => {
 
   const checkVoteStatus = async () => {
     try {
-      // check vote status from backend
-      const response = await fetch(`/api/polls/${id}/vote-status`, {
-        credentials: "include",
-      })
-      const data = await response.json()
+      const response = await votingAPI.getVoteStatus(id)
+      const data = response.data
 
       if (data.hasVoted) {
         setHasVoted(true)
@@ -63,20 +52,23 @@ const PollView = () => {
 
   const handleVote = async (optionId) => {
     try {
-      const response = await fetch(`/api/polls/${id}/vote`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Idempotency-Key": crypto.randomUUID(),
-        },
-        credentials: "include",
-        body: JSON.stringify({ optionId }),
+      const response = await votingAPI.castVote(
+        id, 
+        { optionId }, 
+        crypto.randomUUID()
+      )
+      const data = response.data
+
+      setHasVoted(true)
+      setUserChoice(data.yourChoice)
+      toast({
+        title: "Vote Recorded",
+        description: "Your vote has been recorded successfully!",
       })
-
-      const data = await response.json()
-
-      if (response.status === 409) {
+    } catch (error) {
+      if (error.response?.status === 409) {
         // Already voted
+        const data = error.response.data
         setHasVoted(true)
         setUserChoice(data.yourChoice)
         toast({
@@ -86,20 +78,9 @@ const PollView = () => {
         return
       }
 
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to vote")
-      }
-
-      setHasVoted(true)
-      setUserChoice(data.yourChoice)
-      toast({
-        title: "Vote Recorded",
-        description: "Your vote has been recorded successfully!",
-      })
-    } catch (error) {
       toast({
         title: "Error Voting",
-        description: error.message,
+        description: error.response?.data?.error || error.message,
         variant: "destructive",
       })
     }

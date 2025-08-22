@@ -2,8 +2,9 @@ import React from 'react'
 import { useState } from "react"
 import { Settings, Trash2, Eye, EyeOff, BarChart3, TrendingUp } from "lucide-react"
 import { useToast } from '../hooks/use-toast'
+import { pollsAPI } from '../utils/api'
 
-const CreatorPanel = () => {
+const CreatorPanel = ({ poll, creatorSecret, onSettingsUpdate }) => {
     const { toast } = useToast()
     const [updating, setUpdating] = useState(false)
     const [deleting, setDeleting] = useState(false)
@@ -11,23 +12,10 @@ const CreatorPanel = () => {
     const updateSettings = async (newSettings) => {
         setUpdating(true)
         try {
-
-            // api call to update settings
-            // const response = await fetch(`/api/polls/${poll.id}/settings`, {
-            //     method: "PUT",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
-            //     body: JSON.stringify({
-            //         creatorSecret,
-            //         ...newSettings,
-            //     }),
-            // })
-
-            if (!response.ok) {
-                const data = await response.json()
-                throw new Error(data.error || "Failed to update settings")
-            }
+            const response = await pollsAPI.updatePollSettings(poll.id, {
+                creatorSecret,
+                ...newSettings,
+            })
 
             onSettingsUpdate(newSettings)
             toast({
@@ -37,7 +25,7 @@ const CreatorPanel = () => {
         } catch (error) {
             toast({
                 title: "Error updating settings",
-                description: error.message,
+                description: error.response?.data?.error || error.message,
                 variant: "destructive",
             })
         } finally {
@@ -53,19 +41,7 @@ const CreatorPanel = () => {
 
         setDeleting(true)
         try {
-            //  api call to delete poll
-            // const response = await fetch(`/api/polls/${poll.id}`, {
-            //     method: "DELETE",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
-            //     body: JSON.stringify({ creatorSecret }),
-            // })
-
-            if (!response.ok) {
-                const data = await response.json()
-                throw new Error(data.error || "Failed to delete poll")
-            }
+            await pollsAPI.deletePoll(poll.id, creatorSecret)
 
             toast({
                 title: "Poll deleted",
@@ -79,7 +55,7 @@ const CreatorPanel = () => {
         } catch (error) {
             toast({
                 title: "Error deleting poll",
-                description: error.message,
+                description: error.response?.data?.error || error.message,
                 variant: "destructive",
             })
         } finally {

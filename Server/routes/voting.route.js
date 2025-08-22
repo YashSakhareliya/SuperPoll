@@ -9,6 +9,6 @@ router.post('/:id', castVote)
 
 // get req
 // check user already voted or not
-router.get('/:id', voteStatus)
+router.get('/:id/vote-status', voteStatus)
 
 export default router;

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { Share2, Copy, QrCode, Check, ExternalLink } from "lucide-react"
 import { useToast } from '../hooks/use-toast'
 
-const SharePanel = () => {
+const SharePanel = ({ pollId, question }) => {
 
   const { toast } = useToast()
   const [copied, setCopied] = useState(false)

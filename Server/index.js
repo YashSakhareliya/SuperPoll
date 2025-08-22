@@ -71,7 +71,7 @@ app.use("/api/polls", detectSuspiciousActivity)
 
 // Routes
 app.use("/api/polls", pollRoutes)
-app.use("/api/voting", votingRoutes)
+app.use("/api/polls", votingRoutes) // Mount voting routes under /api/polls to match Frontend expectations
 app.use('/og', ogRoutes)
 
 // Health check

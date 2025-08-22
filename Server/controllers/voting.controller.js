@@ -1,6 +1,7 @@
 import { prisma } from "../index.js"
 import { hashToken, hashDevice, hashIP, generateVoteToken } from "../utils/index.js"
 import { v4 as uuidv4 } from "uuid"
+import { broadcastVoteUpdate } from "../scoket/handlers.socket.js"
 
 const castVote = async (req, res) => {
     try {
