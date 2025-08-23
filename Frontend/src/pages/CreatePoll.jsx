@@ -17,7 +17,6 @@ const CreatePoll = () => {
     hideResultsUntilVoted: false,
     quickCreate: "",
   })
-  console.log(formData)
   const addOption = () => {
     if (formData.options.length < 4) {
       setFormData((prev) => ({
@@ -46,7 +45,6 @@ const CreatePoll = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    console.log("In handel submit")
     try {
       const payload = useQuickCreate
         ? {
@@ -57,7 +55,6 @@ const CreatePoll = () => {
         : formData
 
       const response = await pollsAPI.createPoll(payload)
-      console.log(response)
       const data = response.data
 
       localStorage.setItem(`poll_${data.poll.id}_secret`, data.creatorSecret)
