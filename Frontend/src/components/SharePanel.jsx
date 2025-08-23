@@ -175,6 +175,13 @@ const SharePanel = ({ pollId, question }) => {
     }
   }
 
+  const shareOnWhatsApp = () => {
+    // Use OG URL for guaranteed rich preview
+    const whatsappText = `🗳️ Vote in this poll: "${question}"\n\n${ogUrl}`
+    const url = `https://wa.me/?text=${encodeURIComponent(whatsappText)}`
+    window.open(url, "_blank")
+  }
+
   const openPreview = () => {
     window.open(ogUrl, "_blank", "width=800,height=600")
   }
@@ -218,6 +225,13 @@ const SharePanel = ({ pollId, question }) => {
           >
             <Share2 className="h-4 w-4 mr-2" />
             Share
+          </button>
+          <button
+            onClick={shareOnWhatsApp}
+            className="btn btn-primary flex-1 flex items-center justify-center w-auto max-w-1/3"
+          >
+            <Image src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/1024px-WhatsApp.svg.png" className="h-4 w-4 mr-2" />
+            WhatsApp
           </button>
           <button
             onClick={fetchQRCode}
