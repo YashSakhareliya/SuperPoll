@@ -243,7 +243,7 @@ const SharePanel = ({ pollId, question }) => {
         {showQR && qrCodeData && (
           <div className="bg-base-200 rounded-lg mt-4 ">
             {/* QR Actions Header */}
-            <div className="flex items-center justify-between p-3 border-b border-base-300">
+            {/* <div className="flex items-center justify-between p-3 border-b border-base-300">
               <h4 className="font-medium text-sm">QR Code</h4>
               <div className="flex gap-1">
                 <button
@@ -272,7 +272,7 @@ const SharePanel = ({ pollId, question }) => {
                   <Share2 className="h-3 w-3" />
                 </button>
               </div>
-            </div>
+            </div> */}
             
             {/* QR Code Display */}
             <div className="text-center p-4">
@@ -281,7 +281,7 @@ const SharePanel = ({ pollId, question }) => {
                 dangerouslySetInnerHTML={{ __html: qrCodeData.svg }}
               />
               <p className="text-sm text-gray-500">Scan to vote</p>
-              <p className="text-xs text-gray-400 mt-1 break-all">{qrCodeData.pollUrl}</p>
+              {/* <p className="text-xs text-gray-400 mt-1 break-all">{qrCodeData.pollUrl}</p> */}
             </div>
             
             {/* QR Actions Footer */}

@@ -73,32 +73,27 @@ const CreatorPanel = ({ poll, creatorSecret, onSettingsUpdate }) => {
 
 
     return (
-        <div className="card border shadow-md">
-            {/* Card Header */}
-            <div className="card-body pb-3">
-                <div className="flex items-center gap-2 text-lg font-semibold">
+        <div className="card bg-base-100 shadow-xl">
+            <div className="card-body">
+                <h2 className="card-title flex items-center gap-2">
                     <Settings className="h-5 w-5" />
                     Creator Controls
-                </div>
-            </div>
+                </h2>
 
-            {/* Card Content */}
-            <div className="card-body space-y-4 pt-0">
-                {/* Settings */}
-                <div className="space-y-3">
+                {/* Settings Section */}
+                <div className="space-y-4 mt-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             {poll.hideResultsUntilVoted ? (
-                                <EyeOff className="h-4 w-4 text-muted-foreground" />
+                                <EyeOff className="h-4 w-4 text-base-content/60" />
                             ) : (
-                                <Eye className="h-4 w-4 text-muted-foreground" />
+                                <Eye className="h-4 w-4 text-base-content/60" />
                             )}
-                            <label htmlFor="hide-results" className="text-sm">
+                            <label htmlFor="hide-results" className="text-sm font-medium">
                                 Hide results until voted
                             </label>
                         </div>
 
-                        {/* Toggle Switch using DaisyUI */}
                         <input
                             type="checkbox"
                             id="hide-results"
@@ -110,11 +105,11 @@ const CreatorPanel = ({ poll, creatorSecret, onSettingsUpdate }) => {
                     </div>
                 </div>
 
-                {/* Actions */}
-                <div className="space-y-2 pt-4 border-t border-border">
+                {/* Actions Section */}
+                <div className="space-y-2 mt-6">
                     <button
                         onClick={viewStats}
-                        className="btn btn-outline w-full bg-transparent flex items-center justify-center gap-2"
+                        className="btn btn-outline w-full flex items-center justify-center gap-2"
                     >
                         <BarChart3 className="h-4 w-4" />
                         View Analytics
@@ -123,7 +118,7 @@ const CreatorPanel = ({ poll, creatorSecret, onSettingsUpdate }) => {
                     {poll.votesCount >= 20 && (
                         <button
                             onClick={viewAdvancedInsights}
-                            className="btn btn-outline w-full bg-transparent flex items-center justify-center gap-2"
+                            className="btn btn-outline w-full flex items-center justify-center gap-2"
                         >
                             <TrendingUp className="h-4 w-4" />
                             Advanced Insights
@@ -132,8 +127,7 @@ const CreatorPanel = ({ poll, creatorSecret, onSettingsUpdate }) => {
 
                     <button
                         onClick={deletePoll}
-                        className={`btn btn-error w-full flex items-center justify-center gap-2 ${deleting ? "loading" : ""
-                            }`}
+                        className={`btn btn-error w-full flex items-center justify-center gap-2 ${deleting ? "loading" : ""}`}
                         disabled={deleting}
                     >
                         <Trash2 className="h-4 w-4" />
@@ -142,7 +136,6 @@ const CreatorPanel = ({ poll, creatorSecret, onSettingsUpdate }) => {
                 </div>
             </div>
         </div>
-
     )
 }
 

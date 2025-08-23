@@ -173,7 +173,7 @@ const PollView = () => {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-muted rounded w-3/4"></div>
           <div className="h-32 bg-muted rounded"></div>
@@ -189,11 +189,11 @@ const PollView = () => {
 
   if (error || !poll) {
     return (
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
-        <div className="text-center py-16">
+        <div className="text-center py-8 sm:py-12 lg:py-16">
           <div className="text-6xl mb-6">😕</div>
-          <h1 className="text-4xl font-bold text-foreground mb-4 leading-tight">
+          <h1 className="text-4xl font-bold text-foreground mb-4 sm:mb-6 leading-tight">
             Poll Not Found
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
@@ -215,19 +215,19 @@ const PollView = () => {
   const minutesLeft = Math.max(0, Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)));
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Hero Section */}
-      <div className="text-center py-16">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium mb-6">
-          <TrendingUp className="h-4 w-4" />
+      <div className="text-center py-8 sm:py-12 lg:py-16">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-primary/10 text-primary rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
+          <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
           Live Poll Results
         </div>
-        <h1 className="text-4xl font-bold text-foreground mb-6 leading-tight">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4 sm:mb-6 leading-tight px-2">
           {poll.question}
         </h1>
-        <div className="flex items-center justify-center gap-6 text-muted-foreground mb-8">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-muted-foreground mb-6 sm:mb-8 text-sm sm:text-base">
           <span className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
+            <Users className="h-4 w-4 sm:h-5 sm:w-5" />
             {poll.votesCount} votes
           </span>
           {viewerCount > 0 && (
@@ -237,9 +237,9 @@ const PollView = () => {
             </span>
           )}
           <span className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
+            <Clock className="h-4 w-4 sm:h-5 sm:w-5" />
             {poll.isExpired ? (
-              <span className="inline-flex items-center gap-1 px-3 py-1 bg-destructive/10 text-destructive rounded-full text-sm font-medium">
+              <span className="inline-flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-1 bg-destructive/10 text-destructive rounded-full text-xs sm:text-sm font-medium">
                 Expired
               </span>
             ) : (
@@ -251,15 +251,15 @@ const PollView = () => {
         </div>
         
         {/* Status Badges */}
-        <div className="flex items-center justify-center gap-3 mb-8">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
           {(poll.insight || poll.insightSummary) && (
-            <div className="inline-flex items-center gap-1 px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm font-medium">
-              <TrendingUp className="h-4 w-4" />
+            <div className="inline-flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-1 bg-secondary/10 text-secondary rounded-full text-xs sm:text-sm font-medium">
+              <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
               Insight Available
             </div>
           )}
           {isCreator && (
-            <div className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+            <div className="inline-flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-1 bg-primary/10 text-primary rounded-full text-xs sm:text-sm font-medium">
               Creator
             </div>
           )}
@@ -268,27 +268,27 @@ const PollView = () => {
 
       {/* Insights Section */}
       {(poll.insight || poll.insightSummary) && (
-        <div className="bg-card border border-border rounded-2xl p-6 mb-8">
+        <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
           <InsightCard poll={poll} insightSummary={poll.insightSummary} />
         </div>
       )}
 
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
         {/* Main Poll Content */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
           {!hasVoted && !poll.isExpired ? (
-            <div className="bg-card border border-border rounded-2xl p-8">
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-foreground mb-2">Cast Your Vote</h2>
-                <p className="text-muted-foreground">Choose your preferred option below</p>
+            <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8">
+              <div className="mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">Cast Your Vote</h2>
+                <p className="text-muted-foreground text-sm sm:text-base">Choose your preferred option below</p>
               </div>
               <VotingInterface poll={poll} onVote={handleVote} showResults={!poll.hideResultsUntilVoted} />
             </div>
           ) : (
-            <div className="bg-card border border-border rounded-2xl p-8">
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-foreground mb-2">Poll Results</h2>
-                <p className="text-muted-foreground">
+            <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8">
+              <div className="mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">Poll Results</h2>
+                <p className="text-muted-foreground text-sm sm:text-base">
                   {hasVoted ? "Thank you for voting! Here are the current results:" : "Results for this poll:"}
                 </p>
               </div>
@@ -298,15 +298,15 @@ const PollView = () => {
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-6">
-          <div className="bg-card border border-border rounded-2xl p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Share This Poll</h3>
+        <div className="space-y-4 sm:space-y-6">
+          <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">Share This Poll</h3>
             <SharePanel pollId={id} question={poll.question} />
           </div>
 
           {isCreator && (
-            <div className="bg-card border border-border rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Creator Controls</h3>
+            <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">Creator Controls</h3>
               <CreatorPanel
                 poll={poll}
                 creatorSecret={creatorSecret}
