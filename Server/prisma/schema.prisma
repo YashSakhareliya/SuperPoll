@@ -48,5 +48,7 @@ model Vote {
 
   @@unique([pollId, tokenHash])
   @@unique([pollId, idempotencyKey])
+  @@unique([pollId, deviceHash])
+  @@index([pollId, ipHash])
   @@map("votes")
 }

@@ -1,15 +1,15 @@
 import { prisma } from "../index.js"
-import { hashToken, hashDevice, hashIP, generateVoteToken } from "../utils/index.js"
+import { hashToken, hashDevice, hashIP, hashIPSubnet, generateVoteToken } from "../utils/index.js"
 import { v4 as uuidv4 } from "uuid"
 import { broadcastVoteUpdate } from "../scoket/handlers.socket.js"
 
 const castVote = async (req, res) => {
     try {
         const { id: pollId } = req.params
-        const { optionId } = req.body
+        const { optionId, fingerprint = {} } = req.body
         const idempotencyKey = req.headers["idempotency-key"] || uuidv4()
 
-        // Get client info for fingerprinting
+        // Get client info for enhanced fingerprinting
         const userAgent = req.headers["user-agent"] || ""
         const clientIP = req.ip || req.connection.remoteAddress || "unknown"
 
@@ -19,10 +19,11 @@ const castVote = async (req, res) => {
             voteToken = generateVoteToken()
         }
 
-        // Create hashes
+        // Create enhanced hashes
         const tokenHash = hashToken(pollId, voteToken)
-        const deviceHash = hashDevice(userAgent, clientIP)
+        const deviceHash = hashDevice(userAgent, clientIP, fingerprint)
         const ipHash = hashIP(clientIP)
+        const ipSubnetHash = hashIPSubnet(clientIP)
 
         if (!optionId) {
             return res.status(400).json({ error: "Option ID is required" })
@@ -51,13 +52,16 @@ const castVote = async (req, res) => {
         }
 
         try {
-            // Attempt to create vote with transaction
+            // Enhanced duplicate vote detection
             const result = await prisma.$transaction(async (tx) => {
-                // Check for existing vote by token
+                // Check for existing vote by multiple criteria
                 const existingVote = await tx.vote.findFirst({
                     where: {
                         pollId,
-                        tokenHash,
+                        OR: [
+                            { tokenHash },
+                            { deviceHash }, // Primary device-based check
+                        ],
                     },
                     include: {
                         option: true,
@@ -71,6 +75,27 @@ const castVote = async (req, res) => {
                             id: existingVote.option.id,
                             text: existingVote.option.text,
                         },
+                        reason: existingVote.tokenHash === tokenHash ? 'cookie' : 'device'
+                    }
+                }
+
+                // Additional IP-based suspicious activity check
+                const recentVotesFromIP = await tx.vote.count({
+                    where: {
+                        pollId,
+                        ipHash,
+                        createdAt: {
+                            gte: new Date(Date.now() - 60 * 60 * 1000), // Last hour
+                        },
+                    },
+                })
+
+                // Allow max 3 votes per IP per hour (for shared networks)
+                if (recentVotesFromIP >= 3) {
+                    return {
+                        alreadyVoted: true,
+                        yourChoice: null,
+                        reason: 'ip_limit'
                     }
                 }
 
@@ -101,13 +126,20 @@ const castVote = async (req, res) => {
             })
 
             if (result.alreadyVoted) {
+                const errorMessages = {
+                    cookie: "You have already voted in this poll",
+                    device: "A vote has already been cast from this device",
+                    ip_limit: "Too many votes from this network. Please try again later."
+                }
+
                 return res.status(409).json({
-                    error: "You have already voted in this poll",
+                    error: errorMessages[result.reason] || "You have already voted in this poll",
                     yourChoice: result.yourChoice,
+                    reason: result.reason
                 })
             }
 
-            // Set vote token cookie
+            // Set vote token cookie (still useful for quick detection)
             res.cookie(`vote_${pollId}`, voteToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
@@ -154,6 +186,7 @@ const castVote = async (req, res) => {
                     where: {
                         OR: [
                             { pollId, tokenHash },
+                            { pollId, deviceHash },
                             { pollId, idempotencyKey },
                         ],
                     },
@@ -162,14 +195,19 @@ const castVote = async (req, res) => {
                     },
                 })
 
+                const reason = error.meta?.target?.includes('deviceHash') ? 'device' : 'cookie'
+
                 return res.status(409).json({
-                    error: "You have already voted in this poll",
+                    error: reason === 'device' 
+                        ? "A vote has already been cast from this device" 
+                        : "You have already voted in this poll",
                     yourChoice: existingVote
                         ? {
                             id: existingVote.option.id,
                             text: existingVote.option.text,
                         }
                         : null,
+                    reason
                 })
             }
 
@@ -181,24 +219,27 @@ const castVote = async (req, res) => {
     }
 }
 
-
 const voteStatus = async (req, res) => {
     try {
       const { id: pollId } = req.params
+      const { fingerprint = {} } = req.body
   
       // Get vote token from cookie
       const voteToken = req.cookies[`vote_${pollId}`]
-  
-      if (!voteToken) {
-        return res.json({ hasVoted: false })
-      }
-  
-      const tokenHash = hashToken(pollId, voteToken)
+      const userAgent = req.headers["user-agent"] || ""
+      const clientIP = req.ip || req.connection.remoteAddress || "unknown"
+      
+      // Create hashes for checking
+      const tokenHash = voteToken ? hashToken(pollId, voteToken) : null
+      const deviceHash = hashDevice(userAgent, clientIP, fingerprint)
   
       const existingVote = await prisma.vote.findFirst({
         where: {
           pollId,
-          tokenHash,
+          OR: [
+            ...(tokenHash ? [{ tokenHash }] : []),
+            { deviceHash },
+          ],
         },
         include: {
           option: true,

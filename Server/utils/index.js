@@ -1,5 +1,5 @@
 import { parseQuickCreate } from "./parser.utils.js";
-import { generateCreatorSecret, hashToken, hashDevice, hashIP, generateVoteToken, hashPassword, comparePassword } from "./crypto.utils.js";
+import { generateCreatorSecret, hashToken, hashDevice, hashIP, hashIPSubnet, generateVoteToken, hashPassword, comparePassword } from "./crypto.utils.js";
 import { generatePollQR, generatePollQRSVG } from "./qr.utils.js";
 import { generateInsight, generateInsightSummary, generateAdvancedInsights } from "./insights.utils.js";
 import { getVoteAnalytics, detectVotingAnomalies } from "./analytics.js";
@@ -11,6 +11,7 @@ export { parseQuickCreate,
     hashToken,
     hashDevice,
     hashIP,
+    hashIPSubnet,
     generateVoteToken,
     hashPassword,
     comparePassword,

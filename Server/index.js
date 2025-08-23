@@ -59,24 +59,41 @@ app.use(cookieParser())
 // Trust proxy for accurate IP addresses
 app.set("trust proxy", 1)
 
-// Rate limiting
-const limiter = rateLimit({
+// General API rate limiting (more lenient)
+const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 300, // Increased from 100 to 300 requests per 15 minutes
   message: "Too many requests from this IP, please try again later.",
 })
 
-app.use("/api/", limiter)
+// Apply general rate limiting to all API routes
+app.use("/api/", generalLimiter)
 
-// Vote-specific rate limiting
+// Vote-specific rate limiting (strict, only for voting)
 const voteLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 10, // limit each IP to 10 votes per minute
+  max: 5, // Reduced from 10 to 5 votes per minute (more strict)
   message: "Too many votes from this IP, please slow down.",
+  standardHeaders: true,
+  legacyHeaders: false,
 })
 
-app.use("/api/polls", voteLimiter)
-app.use("/api/polls", detectSuspiciousActivity)
+// Apply vote-specific rate limiting and suspicious activity detection only to voting endpoints
+const applyVotingSecurity = (req, res, next) => {
+  // Only apply to POST requests (voting) on poll endpoints
+  if (req.method === 'POST' && req.path.match(/^\/[^\/]+$/)) {
+    // This matches /api/polls/:id (cast vote)
+    return voteLimiter(req, res, (err) => {
+      if (err) return next(err)
+      detectSuspiciousActivity(req, res, next)
+    })
+  }
+  // Skip rate limiting for other requests (GET poll data, stats, etc.)
+  next()
+}
+
+// Apply voting security only to voting endpoints
+app.use("/api/polls", applyVotingSecurity)
 
 // Bot detection middleware for social media crawlers
 const isSocialBot = (userAgent) => {

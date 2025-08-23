@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getEnhancedFingerprint } from './fingerprint.js'
 
 // Create axios instance with base configuration
 const api = axios.create({
@@ -73,15 +74,29 @@ export const pollsAPI = {
 }
 
 export const votingAPI = {
-  // POST /api/polls/:id - Cast a vote (voting controller handles POST to same endpoint)
-  castVote: (id, voteData, idempotencyKey) => api.post(`/api/polls/${id}`, voteData, {
-    headers: {
-      'Idempotency-Key': idempotencyKey
-    }
-  }),
+  // POST /api/polls/:id - Cast a vote with device fingerprint
+  castVote: async (id, voteData, idempotencyKey) => {
+    const fingerprint = getEnhancedFingerprint()
+    
+    return api.post(`/api/polls/${id}`, {
+      ...voteData,
+      fingerprint
+    }, {
+      headers: {
+        'Idempotency-Key': idempotencyKey
+      }
+    })
+  },
   
-  // GET /api/polls/:id/vote-status - Check vote status (custom endpoint for vote status)
-  getVoteStatus: (id) => api.get(`/api/polls/${id}/vote-status`)
+  // GET /api/polls/:id/vote-status - Check vote status with device fingerprint
+  getVoteStatus: async (id) => {
+    const fingerprint = getEnhancedFingerprint()
+    
+    // Send fingerprint in request body for POST-like behavior
+    return api.post(`/api/polls/${id}/vote-status`, {
+      fingerprint
+    })
+  }
 }
 
 export const ogAPI = {
