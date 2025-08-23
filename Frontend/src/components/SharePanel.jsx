@@ -14,7 +14,7 @@ const SharePanel = ({ pollId, question }) => {
   const [qrCopied, setQrCopied] = useState(false)
 
   const shareUrl = `${window.location.origin}/poll/${pollId}`
-  const ogUrl = `${window.location.origin}/og/poll/${pollId}`
+  const ogUrl = `${import.meta.env.VITE_API_URL}/og/poll/${pollId}`
 
   const fetchQRCode = async () => {
     if (qrCodeData) {
@@ -162,7 +162,7 @@ const SharePanel = ({ pollId, question }) => {
         await navigator.share({
           title: "Vote in this poll",
           text: question,
-          url: shareUrl,
+          url: ogUrl,
         })
       } catch (error) {
         // User cancelled or error occurred
@@ -177,7 +177,7 @@ const SharePanel = ({ pollId, question }) => {
 
   const shareOnWhatsApp = () => {
     // Use OG URL for guaranteed rich preview
-    const whatsappText = `🗳️ Vote in this poll: "${question}"\n\n${ogUrl}`
+    const whatsappText = `${ogUrl}`
     const url = `https://wa.me/?text=${encodeURIComponent(whatsappText)}`
     window.open(url, "_blank")
   }
@@ -201,7 +201,7 @@ const SharePanel = ({ pollId, question }) => {
         <div className="flex gap-2 mt-4">
           <input
             type="text"
-            value={shareUrl}
+            value={ogUrl}
             readOnly
             className="input input-bordered w-full text-sm"
           />

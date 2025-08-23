@@ -13,6 +13,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/create" element={<CreatePoll />} />
           <Route path="/poll/:id" element={<PollView />} />
+          <Route path="/og/poll/:id" element={<PollView />} />
           <Route path="/poll/:id/analytics" element={<Analytics />} />
           <Route path="/poll/:id/insights" element={<Insights />} />
         </Routes>
