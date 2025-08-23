@@ -1,7 +1,3 @@
-/**
- * Device Fingerprinting Utility
- * Collects browser and device information for enhanced voting security
- */
 
 export const generateDeviceFingerprint = () => {
   try {
@@ -56,9 +52,6 @@ export const generateDeviceFingerprint = () => {
   }
 }
 
-/**
- * Generate a lightweight canvas fingerprint
- */
 const getCanvasFingerprint = () => {
   try {
     const canvas = document.createElement('canvas')
@@ -88,9 +81,6 @@ const getCanvasFingerprint = () => {
   }
 }
 
-/**
- * Generate WebGL fingerprint
- */
 const getWebGLFingerprint = () => {
   try {
     const canvas = document.createElement('canvas')
@@ -110,9 +100,7 @@ const getWebGLFingerprint = () => {
   }
 }
 
-/**
- * Get a stable device ID (cached in localStorage)
- */
+
 export const getDeviceId = () => {
   const DEVICE_ID_KEY = 'superpoll_device_id'
   
@@ -132,16 +120,10 @@ export const getDeviceId = () => {
   }
 }
 
-/**
- * Generate a random device ID
- */
 const generateRandomId = () => {
   return 'device_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36)
 }
 
-/**
- * Enhanced fingerprint with device ID
- */
 export const getEnhancedFingerprint = () => {
   const fingerprint = generateDeviceFingerprint()
   const deviceId = getDeviceId()

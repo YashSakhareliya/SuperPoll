@@ -62,17 +62,17 @@ app.set("trust proxy", 1)
 // General API rate limiting (more lenient)
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 300, // Increased from 100 to 300 requests per 15 minutes
+  max: 300, // 300 requests per 15 minutes
   message: "Too many requests from this IP, please try again later.",
 })
 
 // Apply general rate limiting to all API routes
 app.use("/api/", generalLimiter)
 
-// Vote-specific rate limiting (strict, only for voting)
+// Vote-specific rate limiting (only for voting)
 const voteLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 5, // Reduced from 10 to 5 votes per minute (more strict)
+  max: 5, // 5 votes per minute (more strict)
   message: "Too many votes from this IP, please slow down.",
   standardHeaders: true,
   legacyHeaders: false,
