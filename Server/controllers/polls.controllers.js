@@ -1,7 +1,7 @@
 import { prisma } from "../index.js";
 import { parseQuickCreate, generateCreatorSecret, generatePollQR, generatePollQRSVG } from "../utils/index.js";
 import { hashToken, hashDevice, hashIP, generateVoteToken, hashPassword, comparePassword } from "../utils/index.js";
-import { generateInsight, generateInsightSummary } from "../utils/index.js";
+import { generateInsight, generateInsightSummary, generateAdvancedInsights } from "../utils/index.js";
 import { broadcastPollDeleted } from "../scoket/handlers.socket.js";
 
 const createPoll = async (req, res) => {

@@ -64,11 +64,13 @@ const CreatorPanel = ({ poll, creatorSecret, onSettingsUpdate }) => {
     }
 
     const viewStats = () => {
-        window.open(`/api/polls/${poll.id}/stats?creatorSecret=${creatorSecret}`, "_blank")
+        // Create a proper analytics page route instead of opening raw API
+        window.open(`/poll/${poll.id}/analytics?creatorSecret=${creatorSecret}`, "_blank")
     }
 
     const viewAdvancedInsights = () => {
-        window.open(`/api/polls/${poll.id}/insights?creatorSecret=${creatorSecret}`, "_blank")
+        // Create a proper insights page route instead of opening raw API  
+        window.open(`/poll/${poll.id}/insights?creatorSecret=${creatorSecret}`, "_blank")
     }
 
 
