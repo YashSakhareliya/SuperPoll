@@ -55,7 +55,7 @@ const PollView = () => {
       const response = await votingAPI.castVote(
         id, 
         { optionId }, 
-        crypto.randomUUID()
+        `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
       )
       const data = response.data
 
@@ -95,7 +95,7 @@ const PollView = () => {
     }
 
     // socket connection
-    const newSocket = io(import.meta.env.VITE_API_URL || "http://localhost:3001")
+    const newSocket = io(import.meta.env.VITE_API_URL || "http://localhost:3000")
     setSocket(newSocket)
 
     // fetch poll data

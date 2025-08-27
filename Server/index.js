@@ -29,8 +29,10 @@ export const redis = createClient({
   url: process.env.REDIS_URL || "redis://localhost:6379",
 })
 
-// Connect to Redis
-redis.connect().catch(console.error)
+// Connect to Redis (optional for local development)
+redis.connect().catch((error) => {
+  console.warn('Redis connection failed (continuing without Redis):', error.message)
+})
 
 // Middleware
 app.use(
