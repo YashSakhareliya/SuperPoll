@@ -1,0 +1,28 @@
+name: "Feature request"
+description: "Suggest an idea"
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      placeholder: Short one-line description
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Why?
+      description: Why is this useful?
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How would this work?
+  - type: checkboxes
+    id: intent
+    attributes:
+      label: Contributor intent
+      options:
+        - label: I want to implement this
