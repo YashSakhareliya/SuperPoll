@@ -1,0 +1,24 @@
+name: "Good first issue proposal"
+description: "Suggest or claim an easy task"
+title: "[GFI]: "
+labels: ["good first issue"]
+body:
+  - type: textarea
+    id: task
+    attributes:
+      label: Task
+      description: What exactly needs doing? Include file paths.
+    validations:
+      required: true
+  - type: textarea
+    id: guidance
+    attributes:
+      label: Guidance
+      description: Hints or commands.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I read CONTRIBUTING.md
+          required: true
